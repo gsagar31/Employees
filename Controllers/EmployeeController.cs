@@ -24,11 +24,48 @@ namespace Employees.Controllers
             return View();
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> View(Guid id)
+        {
+            var employee = await userDbContext.Employees.FirstOrDefaultAsync(x => x.Id == id);
+            if (employee != null)
+            {
+                var viewEmployee = new UpdateEmployeeViewModel()
+                {
+                    Id = employee.Id,
+                    Name = employee.Name,
+                    EmailAddress = employee.EmailAddress,
+                    Salary = employee.Salary,
+                    Designation = employee.Designation
+                };
+                return await Task.Run(() => View("View", viewEmployee));
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> View(UpdateEmployeeViewModel model)
+        {
+            var employee = await userDbContext.Employees.FindAsync(model.Id);
+            if (employee != null)
+            {
+                employee.Name = model.Name;
+                employee.EmailAddress = model.EmailAddress;
+                employee.Salary = model.Salary;
+                employee.Designation = model.Designation;
+             
+                await userDbContext.SaveChangesAsync();
+                return RedirectToAction("ViewEmployees");
+            }
+            return RedirectToAction("ViewEmployees");
+        }
+
         [HttpGet]
         public async Task<IActionResult> ViewEmployees()
         {
-            var employees = await userDbContext.Employees.ToListAsync();
-            return View(employees);
+            var employee = await userDbContext.Employees.ToListAsync();
+            return View(employee);
         }
 
         [HttpPost]
@@ -44,6 +81,19 @@ namespace Employees.Controllers
             };
             await userDbContext.Employees.AddAsync(newEmployee);
             await userDbContext.SaveChangesAsync();
+            return RedirectToAction("ViewEmployees");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(UpdateEmployeeViewModel model)
+        {
+            var employee = await userDbContext.Employees.FindAsync(model.Id);
+            if (employee != null)
+            {
+                userDbContext.Employees.Remove(employee);
+                await userDbContext.SaveChangesAsync();
+                return RedirectToAction("ViewEmployees");
+            }
             return RedirectToAction("ViewEmployees");
         }
     }
