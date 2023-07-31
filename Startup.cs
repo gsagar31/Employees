@@ -1,5 +1,4 @@
 using Employees.Data;
-using Employees.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,9 +26,8 @@ namespace Employees
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            services.AddDbContext<UserDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
-
+            services.AddDbContext<UserDbContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("DBConnection")));
 
         }
 

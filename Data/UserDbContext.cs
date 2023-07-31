@@ -12,6 +12,6 @@ namespace Employees.Data
         public UserDbContext(DbContextOptions options): base(options)
         {
         }
-        public DbSet<User> Employees { get; set; }
+        public DbSet<Employee> Employees { get; set; }
     }
 }
