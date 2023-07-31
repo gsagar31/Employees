@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Employees.Models
 {
-    public class User
+    public class Employee
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
